@@ -1,0 +1,26 @@
+[Unit]
+Description=VPS Nginx/Apache Access Log Monitor & Telegram Security Bot
+After=network.target nginx.service apache2.service
+
+[Service]
+Type=simple
+# Sesuaikan user jika ingin non-root (pastikan user punya izin baca ke /var/log/nginx/)
+User=root
+WorkingDirectory=/opt/vps-bot
+ExecStart=/opt/vps-bot/venv/bin/python /opt/vps-bot/main.py
+
+# Restart otomatis jika script mengalami crash
+Restart=always
+RestartSec=5s
+
+# Limit resource dan log standard output ke journalctl
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=vps-logbot
+
+# Pengamanan proses
+NoNewPrivileges=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
